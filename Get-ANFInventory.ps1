@@ -22,7 +22,7 @@ $anf_pool_writeln = "Name,ResourceGroupName,Location,ID,PoolId,Size,PoolSizeTB,S
 Out-File -FilePath $anf_pool_file -InputObject $anf_pool_writeln -Encoding ASCII
 
 # Build header for volume CSV file.
-$anf_vol_writeln = "Name,ResourceGroupName,Location,ProvisioningState,ServiceLevel,ProtocolTypes,Usage,ConsumedSize,MountPath,ExportList"
+$anf_vol_writeln = "Name,ResourceGroupName,Location,ProvisioningState,ServiceLevel,NetworkFeatures,ProtocolTypes,Usage,ConsumedSize,MountPath,ExportList"
 Out-File -FilePath $anf_vol_file -InputObject $anf_vol_writeln -Encoding ASCII
 
 # Prompt Login to Azure
@@ -107,7 +107,7 @@ foreach ($sub in $subscriptions) {
                 }
 
                 $exports = $exports.replace(',', ';')
-                $anf_vol_writeln = $($volume.Name) + "," + $($_.ResourceGroupName) + "," + $($_.Location) + "," + $($_.ProvisioningState) + "," + $($_.ServiceLevel) + "," + $volume.ProtocolTypes + "," + $volume.UsageThreshold / 1024 / 1024 / 1024 + "," + $consumedSize / 1024 / 1024 / 1024 + "," + $mountPath + "," + $exports
+                $anf_vol_writeln = $($volume.Name) + "," + $($_.ResourceGroupName) + "," + $($_.Location) + "," + $($_.ProvisioningState) + "," + $($_.ServiceLevel) + "," + $volume.NetworkFeatures + "," + $volume.ProtocolTypes + "," + $volume.UsageThreshold / 1024 / 1024 / 1024 + "," + $consumedSize / 1024 / 1024 / 1024 + "," + $mountPath + "," + $exports
                 Out-File -FilePath $anf_vol_file -InputObject $anf_vol_writeln -Encoding ASCII -Append
             }
         }
