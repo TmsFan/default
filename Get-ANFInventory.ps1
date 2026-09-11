@@ -25,6 +25,11 @@ Out-File -FilePath $anf_pool_file -InputObject $anf_pool_writeln -Encoding ASCII
 $anf_vol_writeln = "Name,ResourceGroupName,Location,ProvisioningState,ServiceLevel,NetworkFeatures,ProtocolTypes,Usage,ConsumedSize,MountPath,ExportList"
 Out-File -FilePath $anf_vol_file -InputObject $anf_vol_writeln -Encoding ASCII
 
+# Suppress benign SharedTokenCacheCredential fallback warnings emitted by the
+# Az authentication chain during token acquisition (harmless: a later
+# credential in the chain succeeds).
+$WarningPreference = 'SilentlyContinue'
+
 # Prompt Login to Azure
 Connect-AzAccount
 
