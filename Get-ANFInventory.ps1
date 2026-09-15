@@ -22,7 +22,10 @@ $anf_pool_writeln = "Name,ResourceGroupName,Location,ID,PoolId,Size,PoolSizeTB,S
 Out-File -FilePath $anf_pool_file -InputObject $anf_pool_writeln -Encoding ASCII
 
 # Build header for volume CSV file.
-$anf_vol_writeln = "Name,ResourceGroupName,Location,ProvisioningState,ServiceLevel,NetworkFeatures,ProtocolTypes,Usage,ConsumedSize,MountPath,ExportList"
+# NetworkFeatures is the volume's configured setting; EffectiveNetworkFeatures
+# is what's actually in effect. They can differ for volumes originally
+# created with Basic features and later upgraded to Standard.
+$anf_vol_writeln = "Name,ResourceGroupName,Location,ProvisioningState,ServiceLevel,NetworkFeatures,EffectiveNetworkFeatures,ProtocolTypes,Usage,ConsumedSize,MountPath,ExportList"
 Out-File -FilePath $anf_vol_file -InputObject $anf_vol_writeln -Encoding ASCII
 
 # Suppress benign SharedTokenCacheCredential fallback warnings emitted by the
@@ -112,7 +115,7 @@ foreach ($sub in $subscriptions) {
                 }
 
                 $exports = $exports.replace(',', ';')
-                $anf_vol_writeln = $($volume.Name) + "," + $($_.ResourceGroupName) + "," + $($_.Location) + "," + $($_.ProvisioningState) + "," + $($_.ServiceLevel) + "," + $volume.NetworkFeatures + "," + $volume.ProtocolTypes + "," + $volume.UsageThreshold / 1024 / 1024 / 1024 + "," + $consumedSize / 1024 / 1024 / 1024 + "," + $mountPath + "," + $exports
+                $anf_vol_writeln = $($volume.Name) + "," + $($_.ResourceGroupName) + "," + $($_.Location) + "," + $($_.ProvisioningState) + "," + $($_.ServiceLevel) + "," + $volume.NetworkFeatures + "," + $volume.EffectiveNetworkFeatures + "," + $volume.ProtocolTypes + "," + $volume.UsageThreshold / 1024 / 1024 / 1024 + "," + $consumedSize / 1024 / 1024 / 1024 + "," + $mountPath + "," + $exports
                 Out-File -FilePath $anf_vol_file -InputObject $anf_vol_writeln -Encoding ASCII -Append
             }
         }
